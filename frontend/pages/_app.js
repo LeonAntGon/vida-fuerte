@@ -1,0 +1,22 @@
+import Header from "@/components/Header";
+import Aos from "@/components/Aos";
+import Footer from "@/components/Footer";
+import ScrollToTopBtn from "@/components/ScrollToTopBtn";
+import TopLoadingLine from "@/components/TopLoadingLine";
+import "@/styles/globals.css";
+
+export default function App({ Component, pageProps }) {
+  return (
+    <>
+      <Header />
+      <main>
+        <TopLoadingLine/>
+        <Aos>
+          <Component {...pageProps} />
+        </Aos>
+        <ScrollToTopBtn/>
+      </main>
+      <Footer/>
+    </>
+  );
+}
