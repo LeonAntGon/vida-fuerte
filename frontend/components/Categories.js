@@ -109,7 +109,7 @@ export default function Categories() {
             const Icon = category.icon
 
             return (
-              <Link key={category.slug} href={`/categoria/${category.slug}`} className="group">
+              <Link key={category.slug} href={`/topics/${category.slug}`} className="group">
                 <Card className="h-full overflow-hidden border-0 shadow-md transition-all duration-300 hover:shadow-2xl hover:-translate-y-2 active:scale-98">
                   <CardContent className="relative p-0 h-56 sm:h-64 md:h-72">
                     <div className="absolute inset-0 transition-transform duration-500 group-hover:scale-110">
