@@ -26,40 +26,14 @@ import { Bar } from 'react-chartjs-2';
 import Loading from "@/components/Loading";
 
 export default function Home() {
-  // Register Chart.js components before any other logic
-  ChartJS.register(
-    CategoryScale,
-    LinearScale,
-    BarElement,
-    Title,
-    Tooltip,
-    Legend
-  );
-
-  const { data: session, status } = useSession()
+  const { data: session, status } = useSession();
   const router = useRouter();
-  
-  // Move state declarations before any other logic
+
+  // States (declare before any conditional returns)
   const [blogsData, setBlogsData] = useState([]);
   const [chartData, setChartData] = useState({ labels: [], datasets: [] });
 
-  
-
-  // check if there's no active session and redirect to login page
-  useEffect(() =>{
-    // check if there's no active session and redirect to login page
-    if(!session){
-      router.push('/login')
-    }
-  },[session, router]);
-
-  if(status == "loading") {
-    return <div className="loadingdata flex flex-col flex-center wh_100">
-        <Loading/>
-        <h1>Loading...</h1>
-    </div>
-}
-
+  // Options for the chart (kept same name)
   const options = {
     responsive: true,
     scales: {
@@ -76,64 +50,98 @@ export default function Home() {
         text: 'Blogs creados mensualmente por año',
       },
     }
-  }
+  };
 
+  // Redirect to login if unauthenticated (hook always runs)
+  useEffect(() =>{
+    if (status === "unauthenticated") {
+      router.push('/login');
+    }
+    // no else: we don't return inside the hook
+  },[status, router]);
+
+  // Fetch blogs when authenticated (hook always declared)
   useEffect(() => {
+    if (status !== "authenticated") return;
+
     (async () => {
       try {
         const res = await fetch('/api/blogapi');
+        if (!res.ok) {
+          console.error("Error fetching blogapi:", res.status);
+          return;
+        }
         const data = await res.json();
-        setBlogsData(data);
+        setBlogsData(data || []);
       } catch (err) {
         console.error("Error fetching data", err);
       }
     })();
-  }, []);
+  }, [status]);
 
-  // Fix the data processing useEffect
+  // Process blogsData into chartData
   useEffect(() => {
-    if (blogsData.length > 0) {
-      const monthlydata = blogsData
-        .filter(dat => dat.status === "publish")
-        .reduce((acc, blog) => {
-          const year = new Date(blog.createdAt).getFullYear();
-          const month = new Date(blog.updatedAt).getMonth();
-          acc[year] = acc[year] || Array(12).fill(0);
-          acc[year][month]++;
-          return acc;
-        }, {});
-    
-
-      const labels = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", 
-        "Octubre", "Noviembre", "Diciembre"];
-
-      const years = Object.keys(monthlydata);
-      const datasets = years.map(year => ({
-        label: year,
-        data: monthlydata[year] || Array(12).fill(0),
-        backgroundColor: `rgba(${Math.floor(Math.random() * 255)}, ${Math.floor(Math.random() * 255)}, ${Math.floor(Math.random() * 255)}, 0.5)`,
-        borderColor: `rgba(${Math.floor(Math.random() * 255)}, ${Math.floor(Math.random() * 255)}, ${Math.floor(Math.random() * 255)}, 1)`,
-        borderWidth: 1
-      }));
-
-      setChartData({ labels, datasets });
+    if (!blogsData || blogsData.length === 0) {
+      // Optionally reset chartData if empty
+      setChartData({
+        labels: ["Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre"],
+        datasets: []
+      });
+      return;
     }
+
+    const monthlydata = blogsData
+      .filter(dat => dat.status === "publish")
+      .reduce((acc, blog) => {
+        const year = new Date(blog.createdAt).getFullYear();
+        const month = new Date(blog.updatedAt).getMonth();
+        acc[year] = acc[year] || Array(12).fill(0);
+        acc[year][month]++;
+        return acc;
+      }, {});
+
+    const labels = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre",
+      "Octubre", "Noviembre", "Diciembre"];
+
+    const years = Object.keys(monthlydata);
+    const datasets = years.map(year => ({
+      label: year,
+      data: monthlydata[year] || Array(12).fill(0),
+      backgroundColor: `rgba(${Math.floor(Math.random() * 155 + 80)}, ${Math.floor(Math.random() * 155 + 80)}, ${Math.floor(Math.random() * 155 + 80)}, 0.5)`,
+      borderColor: `rgba(${Math.floor(Math.random() * 155 + 80)}, ${Math.floor(Math.random() * 155 + 80)}, ${Math.floor(Math.random() * 155 + 80)}, 1)`,
+      borderWidth: 1
+    }));
+
+    setChartData({ labels, datasets });
   }, [blogsData]);
 
-  if(session){
+  // Loading UI while NextAuth status is loading
+  if(status === "loading") {
     return (
-      <>
-      
-        <Head>
-          <title>Panel de Admin</title>
-          <meta name="description" content="admin dashboard next app" />
-          <meta name="viewport" content="width=device-width, initial-scale=1" />
-          <link rel="icon" href="/favicon.ico" />
-        </Head>
-      
+      <div className="loadingdata flex flex-col flex-center wh_100">
+        <Loading/>
+        <h1>Loading...</h1>
+      </div>
+    );
+  }
+
+  // If not authenticated (and not loading), don't render dashboard (redirect handled in useEffect)
+  if(!session) {
+    return null;
+  }
+
+  // Main render when session exists
+  return (
+    <>
+      <Head>
+        <title>Panel de Admin</title>
+        <meta name="description" content="admin dashboard next app" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <link rel="icon" href="/favicon.ico" />
+      </Head>
+
       <div className="dashboard">
         {/*Title dashboard*/}
-
         <div className="titledashboard flex flex-sb">
           <div data-aos="fade-right">
             <h2>Panel del <span>Blog</span></h2>
@@ -180,10 +188,7 @@ export default function Home() {
               <h3 className="text-center">10 / 365 <br/> <span>Total publicado</span></h3>
             </div>
 
-            
             <Bar data={chartData} options={options} />
-
-
           </div>
           <div className="right_salescont" data-aos="fade-up">
             <div>
@@ -196,7 +201,6 @@ export default function Home() {
                 <li className="semi-small-dot"></li>
                 <li className="small-dot"></li>
               </ul>
-              
             </div>
             <div className="blogscategory flex flex-center">
               <table>
@@ -230,8 +234,6 @@ export default function Home() {
           </div>
         </div>
       </div>
-      </>
-    );
-  }
-  
+    </>
+  );
 }
