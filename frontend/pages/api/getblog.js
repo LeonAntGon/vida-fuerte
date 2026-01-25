@@ -1,34 +1,47 @@
 import { mongooseConnect } from "@/lib/mongoose";
 import Blog from "@/models/blog";
 
-export default async function handle(req,res){
-    const {method} = req;
-    await mongooseConnect();
+export default async function handle(req, res) {
+    const { method } = req;
 
-    if(method === 'GET') {
-        if (req.query?.id) {
-        const blog = await Blog.findById(req.query.id);
-        res.json(blog);
+    // 1. Envolvemos todo en try-catch para capturar errores de conexión
+    try {
+        await mongooseConnect();
 
-        } else if (req.query?.blogcategory){
-            // fetch blogs by blogcategory
-            const blog = await Blog.find({blogcategory: req.query.blogcategory});
-            res.json(blog.reverse());
-        } else if (req.query?.tags){
-            // fetch blogs by tags
-            const tag = await Blog.find({tags: req.query.tags});
-            res.json(tag.reverse());
-        } else if (req.query?.slug){
-            // fetch blogs by slug
-            const url = await Blog.find({slug: req.query.slug});
-            res.json(url.reverse());
-        } else {
-            // fetch all blogs
-            const blog = await Blog.find();
-            res.json(blog.reverse());
+        if (method === 'GET') {
+            if (req.query?.id) {
+                const blog = await Blog.findById(req.query.id);
+                return res.json(blog);
+            } 
             
+            if (req.query?.blogcategory) {
+                const blog = await Blog.find({ blogcategory: req.query.blogcategory });
+                return res.json(blog.reverse());
+            } 
+            
+            if (req.query?.tags) {
+                const tag = await Blog.find({ tags: req.query.tags });
+                return res.json(tag.reverse());
+            } 
+            
+            if (req.query?.slug) {
+                const url = await Blog.find({ slug: req.query.slug });
+                return res.json(url.reverse());
+            } 
+            
+            // Si no hay filtros, devuelve todos
+            const blog = await Blog.find();
+            return res.json(blog.reverse());
+            
+        } else {
+            return res.status(405).json({ message: "Method Not allowed" });
         }
-    } else {
-        res.status(405).json({ message: "Method Not allowed"});
+    } catch (error) {
+        // Esto es vital: Imprimirá el error real en los Logs de Vercel
+        console.error("❌ Error en la API getblog:", error);
+        return res.status(500).json({ 
+            message: "Error connecting to database", 
+            error: error.message 
+        });
     }
 }
