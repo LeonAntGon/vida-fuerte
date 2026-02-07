@@ -26,7 +26,7 @@ export default function Hero() {
               Descubrí rutinas, suplementos, dietas y herramientas para transformar tu cuerpo y tu mente.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 items-center">              
-              <Button  as="a" href="#category" color="#f97316" className="ml-2 py-5 px-3 ">
+              <Button  as="a" href="/#blogs" color="#f97316" className="ml-2 py-5 px-3 ">
                 <span className="font-bold text-[1rem]">Explorar artículos</span>
 
                 <svg xmlns="http://www.w3.org/2000/svg" width="21" height="12" viewBox="0 0 16 9"
