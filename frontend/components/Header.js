@@ -121,7 +121,7 @@ export default function Header(){
       }
       
     return <>
-    <nav className={`background_primary h-[114px] fixed top-0 left-0 right-0 z-50 w-full transition-all duration-300 ${
+    <nav className={`background_primary fixed top-0 left-0 right-0 z-50 w-full transition-all duration-300 ${
           isScrolled
             ? "bg-background/80 backdrop-blur-sm "
             : "bg-background/95 backdrop-blur-md shadow-md "
@@ -335,6 +335,6 @@ export default function Header(){
       )}
     </nav>
     
-    <div className="h-[114px]" />
+    <div className="h-[104px] sm:h-[114px]" />
     </>
 }
