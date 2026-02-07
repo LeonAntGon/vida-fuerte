@@ -121,7 +121,7 @@ export default function Header(){
       }
       
     return <>
-    <nav className={`background_primary fixed top-0 left-0 right-0 z-50 w-full transition-all duration-300 ${
+    <nav className={`background_primary h-[114px] fixed top-0 left-0 right-0 z-50 w-full transition-all duration-300 ${
           isScrolled
             ? "bg-background/80 backdrop-blur-sm "
             : "bg-background/95 backdrop-blur-md shadow-md "
@@ -129,8 +129,8 @@ export default function Header(){
           
         <div className="container header">
             <div className="logo">
-                <Link href="/" className="flex items-center gap-2 sm:gap-3 font-bold text-lg sm:text-xl group shrink-0">
-              <div className="flex items-center justify-center w-9 h-9 sm:w-10 sm:h-10 lg:w-11 lg:h-11 rounded-lg bg-primary/10 group-hover:bg-primary/20 transition-all duration-300 group-hover:scale-105">
+                <Link href="/" className="flex items-center gap-3 font-bold text-lg sm:text-xl group shrink-0">
+              <div className="flex items-center justify-center w-10 h-10 lg:w-11 lg:h-11 rounded-lg bg-primary/10 group-hover:bg-primary/20 transition-all duration-300 group-hover:scale-105">
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-dumbbell-icon lucide-dumbbell"><path d="M17.596 12.768a2 2 0 1 0 2.829-2.829l-1.768-1.767a2 2 0 0 0 2.828-2.829l-2.828-2.828a2 2 0 0 0-2.829 2.828l-1.767-1.768a2 2 0 1 0-2.829 2.829z"/><path d="m2.5 21.5 1.4-1.4"/><path d="m20.1 3.9 1.4-1.4"/><path d="M5.343 21.485a2 2 0 1 0 2.829-2.828l1.767 1.768a2 2 0 1 0 2.829-2.829l-6.364-6.364a2 2 0 1 0-2.829 2.829l1.768 1.767a2 2 0 0 0-2.828 2.829z"/><path d="m9.6 14.4 4.8-4.8"/></svg>
               </div>
               <span className="text-base sm:text-lg md:text-xl lg:text-2xl xl:text-3xl font-bold">
