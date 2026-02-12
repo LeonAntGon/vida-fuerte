@@ -3,7 +3,6 @@ import { useRouter } from "next/router";
 import { useSession } from "next-auth/react";
 import { useState, useEffect } from "react";
 import { IoHome } from "react-icons/io5";
-// Update the imports order
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -29,11 +28,11 @@ export default function Home() {
   const { data: session, status } = useSession();
   const router = useRouter();
 
-  // States (declare before any conditional returns)
+  // Estados
   const [blogsData, setBlogsData] = useState([]);
   const [chartData, setChartData] = useState({ labels: [], datasets: [] });
 
-  // Options for the chart (kept same name)
+  // Opciones de la gráfica
   const options = {
     responsive: true,
     scales: {
@@ -52,15 +51,12 @@ export default function Home() {
     }
   };
 
-  // Redirect to login if unauthenticated (hook always runs)
   useEffect(() =>{
     if (status === "unauthenticated") {
       router.push('/login');
     }
-    // no else: we don't return inside the hook
   },[status, router]);
 
-  // Fetch blogs when authenticated (hook always declared)
   useEffect(() => {
     if (status !== "authenticated") return;
 
@@ -79,10 +75,9 @@ export default function Home() {
     })();
   }, [status]);
 
-  // Process blogsData into chartData
+  // Lógica para la Gráfica
   useEffect(() => {
     if (!blogsData || blogsData.length === 0) {
-      // Optionally reset chartData if empty
       setChartData({
         labels: ["Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre"],
         datasets: []
@@ -115,7 +110,33 @@ export default function Home() {
     setChartData({ labels, datasets });
   }, [blogsData]);
 
-  // Loading UI while NextAuth status is loading
+
+  // --- LÓGICA NUEVA PARA CATEGORÍAS Y TAGS ---
+  
+  // 1. Filtrar solo los publicados (igual que en blogs.js)
+  const publishedBlogs = blogsData.filter(ab => ab.status === 'publish');
+
+  // 2. Extraer todas las categorías de los blogs publicados
+  // Asumimos que blog.blogcategory es un array ['React', 'Nextjs']. Si es string, el código se adapta.
+  const allCategories = publishedBlogs.flatMap(blog => blog.blogcategory || []);
+  
+  // 3. Obtener categorías únicas (para el contador total)
+  const uniqueCategories = [...new Set(allCategories)];
+
+  // 4. Extraer todos los tags
+  const allTags = publishedBlogs.flatMap(blog => blog.tags || []);
+  const uniqueTags = [...new Set(allTags)];
+
+  // 5. Contar cuántos blogs hay por cada categoría (para la tabla)
+  // Esto crea un objeto tipo: { "NextJs": 5, "React": 3 }
+  const categoryCounts = allCategories.reduce((acc, category) => {
+    acc[category] = (acc[category] || 0) + 1;
+    return acc;
+  }, {});
+
+  // -------------------------------------------
+
+
   if(status === "loading") {
     return (
       <div className="loadingdata flex flex-col flex-center wh_100">
@@ -125,12 +146,10 @@ export default function Home() {
     );
   }
 
-  // If not authenticated (and not loading), don't render dashboard (redirect handled in useEffect)
   if(!session) {
     return null;
   }
 
-  // Main render when session exists
   return (
     <>
       <Head>
@@ -141,7 +160,6 @@ export default function Home() {
       </Head>
 
       <div className="dashboard">
-        {/*Title dashboard*/}
         <div className="titledashboard flex flex-sb">
           <div data-aos="fade-right">
             <h2>Panel del <span>Blog</span></h2>
@@ -152,19 +170,21 @@ export default function Home() {
           </div>
         </div>
 
-        {/* dashboard four cards */}
+        {/* Top Four Cards */}
         <div className="topfourcards flex flex-sb">
           <div className="four_card" data-aos="fade-right" >
             <h2>Blogs totales</h2>
-            <span>{blogsData.filter(ab => ab.status === "publish").length}</span>
+            <span>{publishedBlogs.length}</span>
           </div>
           <div className="four_card" data-aos="fade-right">
             <h2>Temas totales</h2>
-            <span>4</span>
+            {/* Usamos el length de las categorías únicas */}
+            <span>{uniqueCategories.length}</span>
           </div>
           <div className="four_card" data-aos="fade-left">
             <h2>Etiquetas totales</h2>
-            <span>5</span>
+             {/* Usamos el length de los tags únicos */}
+            <span>{uniqueTags.length}</span>
           </div>
           <div className="four_card" data-aos="fade-left">
             <h2>Borradores totales</h2>
@@ -172,11 +192,11 @@ export default function Home() {
           </div>
         </div>
 
-        {/* year overview */}
+        {/* Year Overview & Categories Table */}
         <div className="year_overview flex flex-sb">
           <div className="leftyearoverview"  data-aos="fade-up">
             <div className="flex flex-sb">
-              <h3>Year overview</h3>
+              <h3>Resumen Anual</h3>
               <ul className="creative-dots">
                 <li className="big-dot"></li>
                 <li className="semi-big-dot"></li>
@@ -185,11 +205,12 @@ export default function Home() {
                 <li className="semi-small-dot"></li>
                 <li className="small-dot"></li>
               </ul>
-              <h3 className="text-center">10 / 365 <br/> <span>Total publicado</span></h3>
+              <h3 className="text-center">{publishedBlogs.length} / 365 <br/> <span>Total publicado</span></h3>
             </div>
 
             <Bar data={chartData} options={options} />
           </div>
+
           <div className="right_salescont" data-aos="fade-up">
             <div>
               <h3>Blogs por categoría</h3>
@@ -207,26 +228,23 @@ export default function Home() {
                 <thead>
                   <tr>
                     <td>Tema</td>
-                    <td>Data</td>
+                    <td>Cantidad</td>
                   </tr>
                 </thead>
                 <tbody>
-                  <tr>
-                    <td>Html, Css & JavaScript</td>
-                    <td>10</td>
-                  </tr>
-                  <tr>
-                    <td>NextJs - React</td>
-                    <td>10</td>
-                  </tr>
-                  <tr>
-                    <td>Database</td>
-                    <td>10</td>
-                  </tr>
-                  <tr>
-                    <td>Deployment</td>
-                    <td>10</td>
-                  </tr>
+                  {/* Mapeamos el objeto de conteos */}
+                  {Object.keys(categoryCounts).length > 0 ? (
+                    Object.entries(categoryCounts).map(([categoryName, count]) => (
+                      <tr key={categoryName}>
+                        <td>{categoryName}</td>
+                        <td>{count}</td>
+                      </tr>
+                    ))
+                  ) : (
+                     <tr>
+                        <td colSpan={2}>No hay categorías aún</td>
+                     </tr>
+                  )}
                 </tbody>
               </table>
 
