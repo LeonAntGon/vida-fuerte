@@ -15,7 +15,7 @@ const categories = [
         <path d="m9.6 14.4 4.8-4.8"/>
       </svg>
     ),
-    slug: "rutinas-de-entrenamiento",
+    slug: "rutinas",
     image: "https://images.unsplash.com/photo-1551984427-6d77a1918093?q=80&w=758&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
   },
   {
@@ -39,7 +39,7 @@ const categories = [
         <path d="M7 2v2"/>
       </svg>
     ),
-    slug: "maquinas-y-equipamiento",
+    slug: "equipamiento",
     image: "https://images.unsplash.com/photo-1697490580141-a76008636dd7?q=80&w=870&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
   },
   {
