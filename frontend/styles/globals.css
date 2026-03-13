@@ -1500,3 +1500,40 @@ button {
     font-size: 35px;
   }
 }
+
+/* ESTILOS PARA LAS TABLAS DE LOS BLOGS */
+/* Estilos para las tablas renderizadas por ReactMarkdown en la clase .blogcontent */
+.blogcontent table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 2rem 0;
+  font-size: 0.95rem;
+  text-align: left;
+  overflow: hidden;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.05);
+  border-radius: 8px;
+}
+
+.blogcontent thead tr {
+  background-color: #0a2342; /* Tu azul oscuro */
+  color: #ffffff;
+  text-align: left;
+}
+
+.blogcontent th,
+.blogcontent td {
+  padding: 12px 15px;
+  border: 1px solid #e2e8f0;
+}
+
+.blogcontent tbody tr {
+  border-bottom: 1px solid #dddddd;
+}
+
+.blogcontent tbody tr:nth-of-type(even) {
+  background-color: #f8fafc; /* Un gris muy sutil para filas intercaladas */
+}
+
+.blogcontent tbody tr:last-of-type {
+  border-bottom: 2px solid #0a2342;
+}
