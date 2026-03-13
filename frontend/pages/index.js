@@ -8,7 +8,7 @@ import Categories from "@/components/Categories"
 export default function Home() {
 
   const [currentPage, setCurrentPage] = useState(1); // page number
-  const [perPage] = useState(4); // cuatro blogs por página
+  const [perPage] = useState(3); // cuatro blogs por página
 
   const { alldata, loading } = useFetchData('/api/getblog');
 
