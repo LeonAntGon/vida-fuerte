@@ -64,10 +64,29 @@ export default function Blog({
     return null;
   }
 
-  // Slug automático
+  // Maneja el cambio de título y genera el slug automáticamente
+  const handleTitleChange = (ev) => {
+    const newTitle = ev.target.value;
+    setTitle(newTitle);
+
+    // Genera el slug limpiando tildes, caracteres especiales y espacios
+    const autoSlug = newTitle
+      .normalize("NFD")                 // Separa las letras de las tildes
+      .replace(/[\u0300-\u036f]/g, "")  // Elimina las tildes
+      .replace(/[^\w\s-]/g, "")         // Elimina caracteres especiales
+      .trim()                           // Quita espacios al inicio y final
+      .replace(/\s+/g, "-")             // Reemplaza espacios por guiones
+      .toLowerCase();                   // Pasa todo a minúsculas
+
+    setSlug(autoSlug);
+  };
+
+  // Maneja el cambio manual del slug (no afecta al título)
   const handleSlugChange = (ev) => {
     const inputValue = ev.target.value;
-    const newSlug = inputValue.replace(/\s+/g, '-');
+    const newSlug = inputValue
+      .replace(/\s+/g, '-')
+      .toLowerCase();
     setSlug(newSlug);
   };
 
@@ -81,7 +100,7 @@ export default function Blog({
             type="text"
             id="title"
             value={title}
-            onChange={(e) => setTitle(e.target.value)}
+            onChange={handleTitleChange} /* <-- Aquí aplicamos la nueva función */
             placeholder="Ingresa un titulo"
           />
         </div>
@@ -134,7 +153,6 @@ export default function Blog({
             }}
             style={{ width: '100%', height: '400px' }}
             renderHTML={(text) => {
-              // Se eliminó el comentario problemático que rompía el return
               return <ReactMarkdown remarkPlugins={[remarkGfm]}>{text}</ReactMarkdown>;
             }}
           />

@@ -51,11 +51,11 @@ export default function Setting(){
                     </div>
                     <div className="flex flex-sb mt-2">
                         <h3>Número:</h3>
-                        <input type="text" defaultValue={+543813380751}/>
+                        <input type="text" defaultValue={+5491239761}/>
                     </div>
 
                     <div className="mt-2">
-                        <input type="email" defaultValue="leonarddevweb@gmail.com"/>
+                        <input type="email" defaultValue="---@gmail.com"/>
                     </div>
                     <div className="flex flex-center w-100 mt-2">
                         <button>Guardar</button>

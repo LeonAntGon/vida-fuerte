@@ -53,7 +53,7 @@ export default function Aside(){
                 </li>
             </Link>
             <Link href="/draft">
-                    <li className={activeLink === '/draft' ? 'draft' : ''}
+                    <li className={activeLink === '/draft' ? 'navactive' : ''}
                         onClick={() => handleClick('/draft')}>
                     <GiSandsOfTime/>
                     <span>Borradores</span>
