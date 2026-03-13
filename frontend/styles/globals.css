@@ -1501,8 +1501,8 @@ button {
   }
 }
 
-/* ESTILOS PARA LAS TABLAS DE LOS BLOGS */
-/* Estilos para las tablas renderizadas por ReactMarkdown en la clase .blogcontent */
+/* ESTILOS PARA LAS TABLAS DE LOS BLOGS (Modo Claro y Oscuro) */
+
 .blogcontent table {
   width: 100%;
   border-collapse: collapse;
@@ -1515,7 +1515,7 @@ button {
 }
 
 .blogcontent thead tr {
-  background-color: #0a2342; /* Tu azul oscuro */
+  background-color: #0a2342;
   color: #ffffff;
   text-align: left;
 }
@@ -1528,12 +1528,40 @@ button {
 
 .blogcontent tbody tr {
   border-bottom: 1px solid #dddddd;
+  background-color: #ffffff;
 }
 
 .blogcontent tbody tr:nth-of-type(even) {
-  background-color: #f8fafc; /* Un gris muy sutil para filas intercaladas */
+  background-color: #f8fafc;
 }
 
 .blogcontent tbody tr:last-of-type {
   border-bottom: 2px solid #0a2342;
+}
+
+.dark .blogcontent table {
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.3); 
+}
+
+.dark .blogcontent thead tr {
+  background-color: #1a202c;
+  color: #edf2f7; 
+}
+
+.dark .blogcontent th,
+.dark .blogcontent td {
+  border: 1px solid #4a5568;
+}
+
+.dark .blogcontent tbody tr {
+  background-color: #2d3748; 
+  border-bottom: 1px solid #4a5568;
+}
+
+.dark .blogcontent tbody tr:nth-of-type(even) {
+  background-color: #354153;
+}
+
+.dark .blogcontent tbody tr:last-of-type {
+  border-bottom: 2px solid #1a202c;
 }
