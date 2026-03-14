@@ -1,5 +1,5 @@
 import Image from "next/image";
-import imgUser from '../public/yop.jpg'
+import imgUser from '../public/pic.webp'
 import { useSession, signIn, signOut } from "next-auth/react"
 import { useRouter } from "next/router";
 import Loading from "@/components/Loading";

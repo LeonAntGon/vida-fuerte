@@ -28,11 +28,9 @@ export default function Home() {
   const { data: session, status } = useSession();
   const router = useRouter();
 
-  // Estados
   const [blogsData, setBlogsData] = useState([]);
   const [chartData, setChartData] = useState({ labels: [], datasets: [] });
 
-  // Opciones de la gráfica
   const options = {
     responsive: true,
     scales: {
@@ -75,7 +73,6 @@ export default function Home() {
     })();
   }, [status]);
 
-  // Lógica para la Gráfica
   useEffect(() => {
     if (!blogsData || blogsData.length === 0) {
       setChartData({
@@ -111,31 +108,19 @@ export default function Home() {
   }, [blogsData]);
 
 
-  // --- LÓGICA NUEVA PARA CATEGORÍAS Y TAGS ---
-  
-  // 1. Filtrar solo los publicados (igual que en blogs.js)
   const publishedBlogs = blogsData.filter(ab => ab.status === 'publish');
 
-  // 2. Extraer todas las categorías de los blogs publicados
-  // Asumimos que blog.blogcategory es un array ['React', 'Nextjs']. Si es string, el código se adapta.
   const allCategories = publishedBlogs.flatMap(blog => blog.blogcategory || []);
   
-  // 3. Obtener categorías únicas (para el contador total)
   const uniqueCategories = [...new Set(allCategories)];
 
-  // 4. Extraer todos los tags
   const allTags = publishedBlogs.flatMap(blog => blog.tags || []);
   const uniqueTags = [...new Set(allTags)];
 
-  // 5. Contar cuántos blogs hay por cada categoría (para la tabla)
-  // Esto crea un objeto tipo: { "NextJs": 5, "React": 3 }
   const categoryCounts = allCategories.reduce((acc, category) => {
     acc[category] = (acc[category] || 0) + 1;
     return acc;
   }, {});
-
-  // -------------------------------------------
-
 
   if(status === "loading") {
     return (
@@ -170,7 +155,6 @@ export default function Home() {
           </div>
         </div>
 
-        {/* Top Four Cards */}
         <div className="topfourcards flex flex-sb">
           <div className="four_card" data-aos="fade-right" >
             <h2>Blogs totales</h2>
@@ -178,12 +162,10 @@ export default function Home() {
           </div>
           <div className="four_card" data-aos="fade-right">
             <h2>Temas totales</h2>
-            {/* Usamos el length de las categorías únicas */}
             <span>{uniqueCategories.length}</span>
           </div>
           <div className="four_card" data-aos="fade-left">
             <h2>Etiquetas totales</h2>
-             {/* Usamos el length de los tags únicos */}
             <span>{uniqueTags.length}</span>
           </div>
           <div className="four_card" data-aos="fade-left">
@@ -192,19 +174,10 @@ export default function Home() {
           </div>
         </div>
 
-        {/* Year Overview & Categories Table */}
         <div className="year_overview flex flex-sb">
           <div className="leftyearoverview"  data-aos="fade-up">
             <div className="flex flex-sb">
               <h3>Resumen Anual</h3>
-              <ul className="creative-dots">
-                <li className="big-dot"></li>
-                <li className="semi-big-dot"></li>
-                <li className="medium-dot"></li>
-                <li className="semi-medium-dot"></li>
-                <li className="semi-small-dot"></li>
-                <li className="small-dot"></li>
-              </ul>
               <h3 className="text-center">{publishedBlogs.length} / 365 <br/> <span>Total publicado</span></h3>
             </div>
 
@@ -214,14 +187,7 @@ export default function Home() {
           <div className="right_salescont" data-aos="fade-up">
             <div>
               <h3>Blogs por categoría</h3>
-              <ul className="creative-dots">
-                <li className="big-dot"></li>
-                <li className="semi-big-dot"></li>
-                <li className="medium-dot"></li>
-                <li className="semi-medium-dot"></li>
-                <li className="semi-small-dot"></li>
-                <li className="small-dot"></li>
-              </ul>
+              
             </div>
             <div className="blogscategory flex flex-center">
               <table>
@@ -232,7 +198,6 @@ export default function Home() {
                   </tr>
                 </thead>
                 <tbody>
-                  {/* Mapeamos el objeto de conteos */}
                   {Object.keys(categoryCounts).length > 0 ? (
                     Object.entries(categoryCounts).map(([categoryName, count]) => (
                       <tr key={categoryName}>

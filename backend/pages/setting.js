@@ -22,10 +22,10 @@ export default function Setting(){
         </div>
     }
 
-    async function logOut(){
-        await router.push('/login')
-        await signOut();
-      }
+    async function logOut() {
+        // signOut se encarga de borrar la sesión y luego te redirige automáticamente
+        await signOut({ callbackUrl: '/login' }); 
+    }
 
     if (session) {
         return <>
