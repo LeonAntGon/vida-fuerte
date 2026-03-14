@@ -5,12 +5,11 @@ import { useEffect, useState } from "react";
 import ReactMarkdown from "react-markdown";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import remarkGfm from "remark-gfm";
+import Head from "next/head";
 
-// 🔥 SOLUCIÓN: Sacamos el componente Code afuera de BlogPage.
-// Esto evita que React lo destruya en cada render y rompa los Hooks.
 const CodeBlock = ({ node, inline, className, children, ...props }) => {
     const match = /language-(\w+)/.exec(className || "");
-    const [copied, setCopied] = useState(false); // Corregido: inicializado en false
+    const [copied, setCopied] = useState(false);
 
     const handleCopy = () => {
         navigator.clipboard.writeText(String(children));
@@ -74,10 +73,9 @@ export default function BlogPage() {
     const router = useRouter();
     const { slug } = router.query;
 
-    const [blog, setBlog] = useState([]); // Corregido: inicializado como array vacío en vez de ['']
+    const [blog, setBlog] = useState([]);
     const [loading, setLoading] = useState(true);
 
-    // estado para la imagen hero y tiempo de lectura
     const [heroImage, setHeroImage] = useState("");
     const [readingTime, setReadingTime] = useState(1);
 
@@ -92,17 +90,14 @@ export default function BlogPage() {
                 })
                 .catch((error) => {
                     console.error("error fetching blog", error);
-                    setLoading(false); // Añadido para que no se quede cargando infinito si falla
+                    setLoading(false);
                 });
         }
     }, [slug]);
 
-    // Extraer primera imagen y calcular tiempo de lectura
     useEffect(() => {
         if (!loading && blog && blog.length > 0 && blog[0]?.description) {
             const md = blog[0].description;
-
-            // Buscar la primera imagen en markdown
             const imgMatch = md.match(/!\[[^\]]*\]\(([^)]+)\)/);
             if (imgMatch && imgMatch[1]) {
                 const url = imgMatch[1].trim();
@@ -111,7 +106,6 @@ export default function BlogPage() {
                 setHeroImage("");
             }
 
-            // Calcular tiempo lectura
             const simplified = md
                 .replace(/[`~*_>#+=-]/g, "")
                 .replace(/\s+/g, " ")
@@ -122,7 +116,6 @@ export default function BlogPage() {
         }
     }, [loading, blog]);
 
-    // Filtrar la heroImage (si es de Dropbox) del markdown
     let filteredMarkdown = blog[0]?.description || "";
 
     if (heroImage && heroImage.includes("dropbox.com")) {
@@ -133,6 +126,16 @@ export default function BlogPage() {
 
     return (
         <>
+            
+            <Head>
+                <title>{blog[0]?.title ? `${blog[0].title} | Vida Fuerte` : "Cargando... | Vida Fuerte"}</title>
+                <meta property="og:title" content={blog[0]?.title || "Vida Fuerte Blog"} />
+                {heroImage && (
+                    <meta property="og:image" content={heroImage} />
+                )}    
+                <meta name="twitter:card" content="summary_large_image" />
+            </Head>
+
             <div className="slugpage">
                 {/* HERO */}
                 {!loading && heroImage ? (
@@ -187,7 +190,7 @@ export default function BlogPage() {
                                     <ReactMarkdown
                                         remarkPlugins={[remarkGfm]}
                                         components={{
-                                            code: CodeBlock, // <-- Ahora pasamos el componente externo
+                                            code: CodeBlock,
                                         }}
                                     >
                                         {filteredMarkdown}
