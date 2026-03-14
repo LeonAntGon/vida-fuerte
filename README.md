@@ -54,19 +54,16 @@
 ## ⚙️ Try it Locally
 
 1. Clone the repository:
-   ```bash
-   git clone [https://github.com/yourusername/vida-fuerte.git](https://github.com/yourusername/vida-fuerte.git)
-Install dependencies:
-
-Bash
-npm install
-Environment Setup:
+   git clone [(https://github.com/LeonAntGon/vida-fuerte.git)]
+   
+3. Install dependencies:
+    npm install
+   
+3. Environment Setup:
 
 Copy the .env.example file and rename it to .env.local.
-
 Add your MongoDB URI, Google Client ID, and NextAuth Secret.
 
-Run the development server:
+4. Run the development server:
 
-Bash
 npm run dev
