@@ -55,15 +55,16 @@
 
 1. Clone the repository:
    git clone [(https://github.com/LeonAntGon/vida-fuerte.git)]
-   
+
+2. Choose backend/ for the dashboard or frontend/ for the actual website
 3. Install dependencies:
     npm install
    
-3. Environment Setup:
+4. Environment Setup:
 
-Copy the .env.example file and rename it to .env.local.
-Add your MongoDB URI, Google Client ID, and NextAuth Secret.
+Copy the .env.example file and rename it to .env.
+Add your MongoDB URI, Google Client ID, and NextAuth Secret if you are in backend/ but if you are in dir frontend/ just take into account MongoDB URI.
 
-4. Run the development server:
+5. Run the development server:
 
 npm run dev
